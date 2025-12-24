@@ -1,7 +1,5 @@
-# app/main/__init__.py
 from flask import Blueprint
 
-# 主应用蓝图
-bp = Blueprint('main', __name__)
+main = Blueprint('main', __name__, template_folder='templates')
 
-from . import routes
+from app.main import routes

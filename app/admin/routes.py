@@ -1,180 +1,206 @@
-from flask import redirect
-from flask_login import login_required, current_user
-from . import bp
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import current_user, login_required
+from app import db
+from app.models import Product, Category, Order, User, UserLog
+from app.forms import ProductForm, CategoryForm
+from app.admin import admin
 
-def admin_required(f):
-    from functools import wraps
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not current_user.is_admin:
-            return """
-            <!DOCTYPE html>
-            <html>
-            <head><title>权限不足</title></head>
-            <body>
-                <h1>❌ 权限不足</h1>
-                <p>您没有访问此页面的权限</p>
-                <a href="/">返回首页</a>
-            </body>
-            </html>
-            """, 403
-        return f(*args, **kwargs)
-    return decorated_function
 
-@bp.route('/')
+@admin.before_request
+def check_admin():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        flash('需要管理员权限', 'danger')
+        return redirect(url_for('main.index'))
+
+
+@admin.route('/dashboard')
 @login_required
-@admin_required
 def dashboard():
-    """管理后台"""
-    return f"""
-    <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>管理后台 - 电商管理系统</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-        <style>
-            body {{ background-color: #f8f9fa; }}
-            .admin-header {{ background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; }}
-            .stat-card {{ border-left: 4px solid; }}
-        </style>
-    </head>
-    <body>
-        <!-- 导航栏 -->
-        <nav class="navbar navbar-expand-lg navbar-dark admin-header shadow">
-            <div class="container">
-                <a class="navbar-brand fw-bold" href="/admin">
-                    <i class="bi bi-shield-check me-2"></i>管理后台
-                </a>
-                <div class="navbar-nav ms-auto">
-                    <span class="nav-link">管理员: {current_user.username}</span>
-                    <a class="nav-link" href="/">返回前台</a>
-                    <a class="nav-link text-warning" href="/auth/logout">退出</a>
-                </div>
-            </div>
-        </nav>
+    # 统计信息
+    total_orders = Order.query.count()
+    total_users = User.query.count()
+    total_products = Product.query.count()
+    total_revenue = db.session.query(db.func.sum(Order.total_amount)).scalar() or 0
 
-        <div class="container py-5">
-            <h2 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>管理仪表盘</h2>
+    # 最近订单
+    recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
 
-            <!-- 统计卡片 -->
-            <div class="row g-4 mb-5">
-                <div class="col-md-3">
-                    <div class="card stat-card border-left-primary h-100">
-                        <div class="card-body">
-                            <h6 class="text-muted">总用户数</h6>
-                            <h3 class="text-primary">0</h3>
-                            <a href="/admin/users" class="btn btn-sm btn-outline-primary">管理用户</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card stat-card border-left-success h-100">
-                        <div class="card-body">
-                            <h6 class="text-muted">总订单数</h6>
-                            <h3 class="text-success">0</h3>
-                            <a href="/admin/orders" class="btn btn-sm btn-outline-success">管理订单</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card stat-card border-left-info h-100">
-                        <div class="card-body">
-                            <h6 class="text-muted">总销售额</h6>
-                            <h3 class="text-info">¥0.00</h3>
-                            <a href="/admin/statistics" class="btn btn-sm btn-outline-info">查看统计</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card stat-card border-left-warning h-100">
-                        <div class="card-body">
-                            <h6 class="text-muted">今日订单</h6>
-                            <h3 class="text-warning">0</h3>
-                            <small class="text-muted">今日收入: ¥0.00</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    # 销售统计（按天）
+    from datetime import datetime, timedelta
+    end_date = datetime.utcnow()
+    start_date = end_date - timedelta(days=30)
 
-            <!-- 快速操作 -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>快速操作</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <a href="/admin/users" class="btn btn-outline-primary w-100">
-                                <i class="bi bi-people me-2"></i>用户管理
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/admin/orders" class="btn btn-outline-success w-100">
-                                <i class="bi bi-cart me-2"></i>订单管理
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/admin/products" class="btn btn-outline-info w-100">
-                                <i class="bi bi-grid me-2"></i>商品管理
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="/admin/logs" class="btn btn-outline-secondary w-100">
-                                <i class="bi bi-clock-history me-2"></i>操作日志
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    return render_template('admin/dashboard.html',
+                           total_orders=total_orders,
+                           total_users=total_users,
+                           total_products=total_products,
+                           total_revenue=total_revenue,
+                           recent_orders=recent_orders)
 
-            <div class="alert alert-info mt-4">
-                <i class="bi bi-info-circle me-2"></i>
-                <strong>提示：</strong> 使用 <code>flask init_db</code> 命令初始化测试数据
-            </div>
-        </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-    </html>
-    """
-
-@bp.route('/users')
+@admin.route('/products')
 @login_required
-@admin_required
-def manage_users():
-    """用户管理"""
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head><title>用户管理</title></head>
-    <body>
-        <div class="container mt-5">
-            <h1>用户管理</h1>
-            <p>用户管理功能正在开发中...</p>
-            <a href="/admin" class="btn btn-primary">返回管理后台</a>
-        </div>
-    </body>
-    </html>
-    """
+def product_manage():
+    page = request.args.get('page', 1, type=int)
+    category_id = request.args.get('category_id', type=int)
 
-@bp.route('/orders')
+    query = Product.query
+    if category_id:
+        query = query.filter_by(category_id=category_id)
+
+    products = query.order_by(Product.created_at.desc()) \
+        .paginate(page=page, per_page=20, error_out=False)
+
+    categories = Category.query.all()
+
+    return render_template('admin/product_manage.html',
+                           products=products,
+                           categories=categories,
+                           category_id=category_id)
+
+
+@admin.route('/product/add', methods=['GET', 'POST'])
 @login_required
-@admin_required
-def manage_orders():
-    """订单管理"""
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head><title>订单管理</title></head>
-    <body>
-        <div class="container mt-5">
-            <h1>订单管理</h1>
-            <p>订单管理功能正在开发中...</p>
-            <a href="/admin" class="btn btn-success">返回管理后台</a>
-        </div>
-    </body>
-    </html>
-    """
+def product_add():
+    form = ProductForm()
+    form.category_id.choices = [(c.id, c.name) for c in Category.query.all()]
+
+    if form.validate_on_submit():
+        product = Product(
+            name=form.name.data,
+            description=form.description.data,
+            price=form.price.data,
+            stock=form.stock.data,
+            category_id=form.category_id.data
+        )
+
+        db.session.add(product)
+        db.session.commit()
+
+        flash('商品添加成功', 'success')
+        return redirect(url_for('admin.product_manage'))
+
+    return render_template('admin/product_edit.html', form=form, title='添加商品')
+
+
+@admin.route('/product/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def product_edit(id):
+    product = Product.query.get_or_404(id)
+    form = ProductForm(obj=product)
+    form.category_id.choices = [(c.id, c.name) for c in Category.query.all()]
+
+    if form.validate_on_submit():
+        product.name = form.name.data
+        product.description = form.description.data
+        product.price = form.price.data
+        product.stock = form.stock.data
+        product.category_id = form.category_id.data
+
+        db.session.commit()
+        flash('商品更新成功', 'success')
+        return redirect(url_for('admin.product_manage'))
+
+    return render_template('admin/product_edit.html', form=form, title='编辑商品')
+
+
+@admin.route('/product/delete/<int:id>', methods=['POST'])
+@login_required
+def product_delete(id):
+    product = Product.query.get_or_404(id)
+
+    db.session.delete(product)
+    db.session.commit()
+
+    flash('商品删除成功', 'success')
+    return redirect(url_for('admin.product_manage'))
+
+
+@admin.route('/categories')
+@login_required
+def category_manage():
+    categories = Category.query.all()
+    return render_template('admin/category_manage.html', categories=categories)
+
+
+@admin.route('/category/add', methods=['GET', 'POST'])
+@login_required
+def category_add():
+    form = CategoryForm()
+
+    if form.validate_on_submit():
+        category = Category(
+            name=form.name.data,
+            description=form.description.data
+        )
+
+        db.session.add(category)
+        db.session.commit()
+
+        flash('分类添加成功', 'success')
+        return redirect(url_for('admin.category_manage'))
+
+    return render_template('admin/category_edit.html', form=form, title='添加分类')
+
+
+@admin.route('/orders')
+@login_required
+def order_manage():
+    page = request.args.get('page', 1, type=int)
+    status = request.args.get('status', '')
+
+    query = Order.query
+    if status:
+        query = query.filter_by(status=status)
+
+    orders = query.order_by(Order.created_at.desc()) \
+        .paginate(page=page, per_page=20, error_out=False)
+
+    return render_template('admin/order_manage.html', orders=orders, status=status)
+
+
+@admin.route('/order/<int:id>')
+@login_required
+def order_view(id):
+    order = Order.query.get_or_404(id)
+    return render_template('admin/order_view.html', order=order)
+
+
+@admin.route('/order/update_status/<int:id>', methods=['POST'])
+@login_required
+def order_update_status(id):
+    order = Order.query.get_or_404(id)
+    status = request.form.get('status')
+
+    if status in ['pending', 'paid', 'shipped', 'delivered', 'cancelled']:
+        order.status = status
+        db.session.commit()
+        flash('订单状态已更新', 'success')
+
+    return redirect(url_for('admin.order_view', id=id))
+
+
+@admin.route('/users')
+@login_required
+def user_manage():
+    page = request.args.get('page', 1, type=int)
+    users = User.query.order_by(User.created_at.desc()) \
+        .paginate(page=page, per_page=20, error_out=False)
+
+    return render_template('admin/user_manage.html', users=users)
+
+
+@admin.route('/logs')
+@login_required
+def user_logs():
+    page = request.args.get('page', 1, type=int)
+    user_id = request.args.get('user_id', type=int)
+
+    query = UserLog.query
+    if user_id:
+        query = query.filter_by(user_id=user_id)
+
+    logs = query.order_by(UserLog.created_at.desc()) \
+        .paginate(page=page, per_page=50, error_out=False)
+
+    return render_template('admin/user_logs.html', logs=logs)
