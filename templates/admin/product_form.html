@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}{{ '编辑商品' if product else '添加商品' }} - 管理后台{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{{ '编辑商品' if product else '添加新商品' }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.edit_product', product_id=product.id) if product else url_for('admin.add_product') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">商品名称 *</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ product.name if product else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">商品描述</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ product.description if product else '' }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="price" class="form-label">价格 *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">¥</span>
+                                <input type="number" class="form-control" id="price" name="price" 
+                                       step="0.01" min="0" value="{{ product.price if product else '0' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label">库存数量 *</label>
+                            <input type="number" class="form-control" id="stock" name="stock" 
+                                   min="0" value="{{ product.stock if product else '0' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category" class="form-label">商品分类</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">选择分类</option>
+                            <option value="电子产品" {{ 'selected' if product and product.category == '电子产品' }}>电子产品</option>
+                            <option value="服装" {{ 'selected' if product and product.category == '服装' }}>服装</option>
+                            <option value="书籍" {{ 'selected' if product and product.category == '书籍' }}>书籍</option>
+                            <option value="家居" {{ 'selected' if product and product.category == '家居' }}>家居用品</option>
+                            <option value="食品" {{ 'selected' if product and product.category == '食品' }}>食品饮料</option>
+                            <option value="美妆" {{ 'selected' if product and product.category == '美妆' }}>美妆护肤</option>
+                            <option value="运动" {{ 'selected' if product and product.category == '运动' }}>运动户外</option>
+                            <option value="数码" {{ 'selected' if product and product.category == '数码' }}>数码配件</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image_url" class="form-label">商品图片URL</label>
+                        <input type="url" class="form-control" id="image_url" name="image_url" 
+                               value="{{ product.image_url if product else '' }}" 
+                               placeholder="https://example.com/image.jpg">
+                        <div class="form-text">可选的商品图片链接</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.manage_products') }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">
+                            {{ '更新商品' if product else '添加商品' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 预览区域 -->
+        {% if product %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">商品预览</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description|default('暂无描述', true) }}</p>
+                                <p class="text-danger">¥{{ "%.2f"|format(product.price) }}</p>
+                                <span class="badge bg-info">{{ product.category or '未分类' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6>商品信息</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>商品ID:</span>
+                                <span>{{ product.id }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>创建时间:</span>
+                                <span>{{ product.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>更新时间:</span>
+                                <span>{{ product.updated_at.strftime('%Y-%m-%d %H:%M:%S') if product.updated_at else '未更新' }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>库存状态:</span>
+                                <span class="badge bg-{{ 'success' if product.stock > 10 else 'warning' if product.stock > 0 else 'danger' }}">
+                                    {{ product.stock }}件
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

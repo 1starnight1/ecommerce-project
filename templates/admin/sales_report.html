@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}销售报表 - 管理后台{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-card {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .report-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>销售报表</h1>
+    <div class="btn-group">
+        <a href="{{ url_for('admin.manage_orders') }}" class="btn btn-outline-primary">
+            <i class="bi bi-receipt"></i> 返回订单管理
+        </a>
+    </div>
+</div>
+
+<!-- 日期筛选 -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">报表筛选</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.sales_report') }}" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">开始日期</label>
+                <input type="date" class="form-control" name="start_date" value="{{ start_date or '' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">结束日期</label>
+                <input type="date" class="form-control" name="end_date" value="{{ end_date or '' }}">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="d-grid gap-2 d-md-flex w-100">
+                    <button type="submit" class="btn btn-primary">筛选</button>
+                    <a href="{{ url_for('admin.sales_report') }}" class="btn btn-outline-secondary">重置</a>
+                </div>
+            </div>
+        </form>
+        {% if start_date or end_date %}
+        <div class="alert alert-info mt-3">
+            <i class="bi bi-info-circle"></i>
+            当前筛选: 
+            {% if start_date and end_date %}
+            {{ start_date }} 至 {{ end_date }}
+            {% elif start_date %}
+            {{ start_date }} 至今
+            {% elif end_date %}
+            至 {{ end_date }}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 总体统计 -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card report-card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-cart-check" style="font-size: 2.5rem; opacity: 0.8;"></i>
+                <div class="report-value mt-2">{{ total_sales }}</div>
+                <p class="mb-0">总订单数</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card report-card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-currency-dollar" style="font-size: 2.5rem; opacity: 0.8;"></i>
+                <div class="report-value mt-2">¥{{ "%.2f"|format(total_revenue) }}</div>
+                <p class="mb-0">总销售额</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card report-card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-graph-up" style="font-size: 2.5rem; opacity: 0.8;"></i>
+                <div class="report-value mt-2">
+                    {% if total_sales > 0 %}
+                    ¥{{ "%.2f"|format(total_revenue / total_sales) }}
+                    {% else %}
+                    ¥0.00
+                    {% endif %}
+                </div>
+                <p class="mb-0">平均订单金额</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 状态统计 -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">订单状态统计</h5>
+            </div>
+            <div class="card-body">
+                {% if status_stats %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>状态</th>
+                                <th>订单数</th>
+                                <th>销售额</th>
+                                <th>占比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in status_stats %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-{% if stat.status == 'pending' %}warning
+                                                         {% elif stat.status == 'paid' %}info
+                                                         {% elif stat.status == 'shipped' %}primary
+                                                         {% elif stat.status == 'completed' %}success
+                                                         {% else %}secondary{% endif %}">
+                                        {% if stat.status == 'pending' %}待支付
+                                        {% elif stat.status == 'paid' %}已支付
+                                        {% elif stat.status == 'shipped' %}已发货
+                                        {% elif stat.status == 'completed' %}已完成
+                                        {% elif stat.status == 'cancelled' %}已取消
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ stat.count }}</td>
+                                <td>¥{{ "%.2f"|format(stat.amount or 0) }}</td>
+                                <td>
+                                    {% if total_sales > 0 %}
+                                    {{ "%.1f"|format(stat.count / total_sales * 100) }}%
+                                    {% else %}
+                                    0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <p class="text-muted">暂无状态统计数据</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">销售效率</h5>
+            </div>
+            <div class="card-body">
+                {% set completed_stats = status_stats|selectattr('status', 'eq', 'completed')|list %}
+                {% set completed_count = completed_stats[0].count if completed_stats else 0 %}
+                {% set completed_amount = completed_stats[0].amount if completed_stats else 0 %}
+                
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="report-value text-success">{{ completed_count }}</div>
+                        <p class="text-muted">完成订单数</p>
+                    </div>
+                    <div class="col-6">
+                        <div class="report-value text-danger">¥{{ "%.2f"|format(completed_amount) }}</div>
+                        <p class="text-muted">完成订单额</p>
+                    </div>
+                </div>
+                
+                <div class="progress mt-3" style="height: 25px;">
+                    <div class="progress-bar bg-success" role="progressbar" 
+                         style="width: {% if total_sales > 0 %}{{ completed_count / total_sales * 100 }}%{% else %}0%{% endif %};">
+                        完成率: {% if total_sales > 0 %}{{ "%.1f"|format(completed_count / total_sales * 100) }}%{% else %}0%{% endif %}
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="bi bi-lightbulb"></i>
+                    <strong>说明:</strong> 完成订单指状态为"已完成"的订单，是实际产生收入的订单。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 每日销售趋势 -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">每日销售趋势</h5>
+        <span class="text-muted">最近30天</span>
+    </div>
+    <div class="card-body">
+        {% if date_stats %}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>日期</th>
+                        <th>订单数</th>
+                        <th>销售额</th>
+                        <th>平均订单额</th>
+                        <th>趋势</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in date_stats %}
+                    <tr>
+                        <td>{{ stat.date }}</td>
+                        <td>{{ stat.order_count }}</td>
+                        <td class="text-danger">¥{{ "%.2f"|format(stat.revenue or 0) }}</td>
+                        <td>
+                            {% if stat.order_count > 0 %}
+                            ¥{{ "%.2f"|format((stat.revenue or 0) / stat.order_count) }}
+                            {% else %}
+                            ¥0.00
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if stat.order_count > 5 %}
+                            <span class="badge bg-success">高</span>
+                            {% elif stat.order_count > 0 %}
+                            <span class="badge bg-warning">中</span>
+                            {% else %}
+                            <span class="badge bg-secondary">低</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <th>总计</th>
+                        <th>{{ date_stats|sum(attribute='order_count') }}</th>
+                        <th class="text-danger">¥{{ "%.2f"|format(date_stats|sum(attribute='revenue') or 0) }}</th>
+                        <th>
+                            {% set total_orders = date_stats|sum(attribute='order_count') %}
+                            {% set total_rev = date_stats|sum(attribute='revenue') or 0 %}
+                            {% if total_orders > 0 %}
+                            ¥{{ "%.2f"|format(total_rev / total_orders) }}
+                            {% else %}
+                            ¥0.00
+                            {% endif %}
+                        </th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-calendar" style="font-size: 4rem; color: #ccc;"></i>
+            <h4 class="mt-3">暂无销售数据</h4>
+            <p class="text-muted">还没有订单记录</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 报表导出 -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">报表导出</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0d6efd;"></i>
+                        <h5 class="mt-2">文本报表</h5>
+                        <p class="text-muted">生成文本格式的销售报表</p>
+                        <button class="btn btn-outline-primary">导出TXT</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-file-earmark-excel" style="font-size: 2rem; color: #198754;"></i>
+                        <h5 class="mt-2">Excel报表</h5>
+                        <p class="text-muted">生成Excel格式的详细报表</p>
+                        <button class="btn btn-outline-success">导出Excel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-file-earmark-pdf" style="font-size: 2rem; color: #dc3545;"></i>
+                        <h5 class="mt-2">PDF报表</h5>
+                        <p class="text-muted">生成PDF格式的正式报表</p>
+                        <button class="btn btn-outline-danger">导出PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>注意:</strong> 导出功能当前为演示版本，实际使用时需要后端支持文件生成。
+        </div>
+    </div>
+</div>
+{% endblock %}
