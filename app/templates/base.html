@@ -3,65 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}电子商务网站{% endblock %}</title>
+    
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- 自定义CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
     {% block head %}{% endblock %}
 </head>
 <body>
     <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <i class="fas fa-shopping-cart"></i> 电商平台
+                <i class="fas fa-shopping-cart me-2"></i>电商平台
             </a>
-            <div class="collapse navbar-collapse">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('main.index') }}">首页</a>
+                        <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" 
+                           href="{{ url_for('main.index') }}">
+                            首页
+                        </a>
                     </li>
+                    
+                    <!-- 用户登录后显示的菜单 -->
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'shop.cart' %}active{% endif %}" 
+                           href="{{ url_for('shop.cart') }}">
+                            购物车
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'shop.orders' %}active{% endif %}" 
+                           href="{{ url_for('shop.orders') }}">
+                            我的订单
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- 管理员菜单 -->
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-warning" href="#" role="button" data-bs-toggle="dropdown">
+                            管理后台
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>仪表板
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('admin.product_manage') }}">
+                                    <i class="fas fa-box me-2"></i>商品管理
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('admin.order_manage') }}">
+                                    <i class="fas fa-receipt me-2"></i>订单管理
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
                 </ul>
+                
+                <!-- 搜索框 -->
+                <form class="d-flex me-3" action="{{ url_for('main.search') }}" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" 
+                               placeholder="搜索商品..." value="{{ request.args.get('q', '') }}">
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- 用户菜单 -->
                 <ul class="navbar-nav">
+                    <!-- 购物车 -->
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.login') }}">登录</a>
+                        <a class="nav-link position-relative" href="{{ url_for('shop.cart') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ cart_items_count|default(0) }}
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% if current_user.is_authenticated %}
+                    <!-- 用户下拉菜单 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ current_user.username }}
+                            {% if current_user.is_admin %}
+                            <span class="badge bg-warning ms-1">管理员</span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('shop.orders') }}">
+                                    <i class="fas fa-receipt me-2"></i>我的订单
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+                                    <i class="fas fa-user-cog me-2"></i>个人资料
+                                </a>
+                            </li>
+                            {% if current_user.is_admin %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-warning" href="{{ url_for('admin.dashboard') }}">
+                                    <i class="fas fa-cogs me-2"></i>管理后台
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>退出登录
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <!-- 登录/注册 -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>登录
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.register') }}">注册</a>
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">
+                            <i class="fas fa-user-plus me-1"></i>注册
+                        </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- 消息提示 -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <!-- 主要内容 -->
-    <main class="container my-4">
+    <main>
         {% block content %}{% endblock %}
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2023 电子商务平台</p>
+    <footer class="footer bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>关于我们</h5>
+                    <p>专业的电子商务平台，提供优质的商品和服务。</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>快速链接</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('main.index') }}">首页</a></li>
+                        <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">注册</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>联系我们</h5>
+                    <p><i class="fas fa-envelope me-2"></i>support@ecommerce.com</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2023 电子商务平台. 保留所有权利.</p>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 自定义JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>

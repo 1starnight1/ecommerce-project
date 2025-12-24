@@ -1,0 +1,80 @@
+﻿{% extends "base.html" %}
+
+{% block title %}个人资料{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">个人中心</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-user me-2"></i>个人资料
+                    </a>
+                    <a href="{{ url_for('shop.orders') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-receipt me-2"></i>我的订单
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>退出登录
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">个人信息</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <th style="width: 150px;">用户名</th>
+                            <td>{{ current_user.username }}</td>
+                        </tr>
+                        <tr>
+                            <th>邮箱</th>
+                            <td>{{ current_user.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>电话</th>
+                            <td>{{ current_user.phone or '未设置' }}</td>
+                        </tr>
+                        <tr>
+                            <th>地址</th>
+                            <td>{{ current_user.address or '未设置' }}</td>
+                        </tr>
+                        <tr>
+                            <th>注册时间</th>
+                            <td>{{ current_user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        <tr>
+                            <th>最后登录</th>
+                            <td>
+                                {% if current_user.last_login %}
+                                    {{ current_user.last_login.strftime('%Y-%m-%d %H:%M:%S') }}
+                                {% else %}
+                                    从未登录
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>用户角色</th>
+                            <td>
+                                {% if current_user.is_admin %}
+                                    <span class="badge bg-warning">管理员</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">普通用户</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
