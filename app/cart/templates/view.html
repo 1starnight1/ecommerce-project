@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .alert { padding: 10px; background: #d4edda; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🛒 购物车</h1>
+    <div class="alert">
+        ✅ 模板加载成功！编码问题已解决。
+    </div>
+    
+    <p>当前时间: {{ now }}</p>
+    
+    <h3>购物车内容：</h3>
+    {% if cart and cart.items %}
+        <ul>
+        {% for item in cart.items %}
+            <li>{{ item.product.name }} - {{ item.quantity }}件</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>购物车为空</p>
+    {% endif %}
+    
+    <a href="/">返回首页</a>
+</body>
+</html>

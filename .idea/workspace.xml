@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="可以登录但登录后无提示" />
+    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="可以登录并显示个人信息。购物车功能未完成">
+      <change afterPath="$PROJECT_DIR$/app/cart/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/cart/routes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/cart/templates/view.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/order/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/order/routes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/order/templates/checkout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/order/templates/detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/order/templates/list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/context_processors.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/context_processors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance/ecommerce.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/ecommerce.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -234,7 +248,7 @@
       <updated>1766543656298</updated>
       <workItem from="1766543657435" duration="18065000" />
       <workItem from="1766576534153" duration="76000" />
-      <workItem from="1766576615643" duration="5382000" />
+      <workItem from="1766576615643" duration="8144000" />
     </task>
     <task id="LOCAL-00001" summary="所有文件配置好，但无法加载模版">
       <option name="closed" value="true" />
@@ -260,7 +274,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766582539996</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="可以登录并显示个人信息。购物车功能未完成">
+      <option name="closed" value="true" />
+      <created>1766582839991</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1766582839991</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,25 +303,15 @@
     <MESSAGE value="所有文件配置好，但无法加载模版" />
     <MESSAGE value="可以加载界面" />
     <MESSAGE value="可以登录但登录后无提示" />
-    <option name="LAST_COMMIT_MESSAGE" value="可以登录但登录后无提示" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/run.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="可以登录并显示个人信息。购物车功能未完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="可以登录并显示个人信息。购物车功能未完成" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ecommerce_project$create_templates.coverage" NAME="create_templates 覆盖结果" MODIFIED="1766572334273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$init_database.coverage" NAME="init_database 覆盖结果" MODIFIED="1766573241378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$check_templates.coverage" NAME="check_templates 覆盖结果" MODIFIED="1766571981097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/ecommerce_project$check_templates__1_.coverage" NAME="check_templates (1) 覆盖结果" MODIFIED="1766571994690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ecommerce_project$run.coverage" NAME="run 覆盖结果" MODIFIED="1766582444277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ecommerce_project$run.coverage" NAME="run 覆盖结果" MODIFIED="1766585266898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$init_db.coverage" NAME="init_db 覆盖结果" MODIFIED="1766574590944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$fix.coverage" NAME="fix 覆盖结果" MODIFIED="1766572654399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$create_all_templates.coverage" NAME="create_all_templates 覆盖结果" MODIFIED="1766571923191" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />

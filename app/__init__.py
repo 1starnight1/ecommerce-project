@@ -39,11 +39,15 @@ def create_app(config_name='default'):
     from app.main import main as main_blueprint
     from app.shop import shop as shop_blueprint
     from app.admin import admin as admin_blueprint
-    
+    from app.cart import cart as cart_blueprint
+    from app.order import order as order_blueprint
+
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(main_blueprint)
     app.register_blueprint(shop_blueprint, url_prefix='/shop')
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    app.register_blueprint(cart_blueprint, url_prefix='/cart')
+    app.register_blueprint(order_blueprint, url_prefix='/order')
     
     # 注册错误处理器
     from app.errors import register_error_handlers

@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>结算</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>💰 结算页面</h1>
+    <p class="success">✅ 模板加载成功！</p>
+    
+    {% if cart %}
+        <p>订单总额: ¥{{ cart.total_price }}</p>
+    {% endif %}
+    
+    <form method="POST">
+        <label>收货地址：</label><br>
+        <textarea name="address" rows="3" cols="50"></textarea><br><br>
+        <button type="submit">提交订单</button>
+    </form>
+</body>
+</html>
