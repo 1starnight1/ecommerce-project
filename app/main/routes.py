@@ -28,7 +28,7 @@ def index():
         db.session.add(log)
         db.session.commit()
 
-    return render_template('main/index.html',
+    return render_template('index.html',
                            products=products,
                            categories=categories,
                            category_id=category_id)

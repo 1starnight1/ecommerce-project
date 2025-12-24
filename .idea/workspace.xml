@@ -4,68 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="页面可正常加载，可登入">
-      <change afterPath="$PROJECT_DIR$/app/admin/templates/product_manage.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/templates/register.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/main/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/main/templates/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/main/templates/product_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/shop/templates/cart.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/shop/templates/checkout.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/shop/templates/orders.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/create_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/orders.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/users.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cart/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cart/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main/__init__.py" afterDir="false" />
+    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="所有文件配置好，但无法加载模版">
       <change beforePath="$PROJECT_DIR$/app/main/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/orders/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/email.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/orders/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/products/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/products/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/complete_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/init_database.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/logs.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/manage_orders.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/order_detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/orders.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/product_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/products.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/sales_report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/users.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/auth/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/auth/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cart/view.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/errors/403.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/templates/admin_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/errors/404.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/errors/500.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/main/about.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/main/contact.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/main/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/main/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/orders/checkout.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/orders/detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/orders/list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/products/detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/products/list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_login_status.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/shop/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/shop/routes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -296,12 +236,36 @@
       <updated>1766543656298</updated>
       <workItem from="1766543657435" duration="18065000" />
       <workItem from="1766576534153" duration="76000" />
-      <workItem from="1766576615643" duration="3440000" />
+      <workItem from="1766576615643" duration="3752000" />
     </task>
+    <task id="LOCAL-00001" summary="所有文件配置好，但无法加载模版">
+      <option name="closed" value="true" />
+      <created>1766580776315</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1766580776315</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="所有文件配置好，但无法加载模版" />
+    <option name="LAST_COMMIT_MESSAGE" value="所有文件配置好，但无法加载模版" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -319,7 +283,7 @@
     <SUITE FILE_PATH="coverage/ecommerce_project$init_database.coverage" NAME="init_database 覆盖结果" MODIFIED="1766573241378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$check_templates.coverage" NAME="check_templates 覆盖结果" MODIFIED="1766571981097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/ecommerce_project$check_templates__1_.coverage" NAME="check_templates (1) 覆盖结果" MODIFIED="1766571994690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ecommerce_project$run.coverage" NAME="run 覆盖结果" MODIFIED="1766580525972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ecommerce_project$run.coverage" NAME="run 覆盖结果" MODIFIED="1766580912633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$init_db.coverage" NAME="init_db 覆盖结果" MODIFIED="1766574590944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$fix.coverage" NAME="fix 覆盖结果" MODIFIED="1766572654399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ecommerce_project$create_all_templates.coverage" NAME="create_all_templates 覆盖结果" MODIFIED="1766571923191" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
