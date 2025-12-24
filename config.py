@@ -1,56 +1,51 @@
-# config.py
-import os
-from datetime import timedelta
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-
+﻿import os
 
 class Config:
-    """基础配置"""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-please-change-in-production'
-
-    # 数据库配置
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data.db')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-here'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///ecommerce.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # 文件上传
-    UPLOAD_FOLDER = os.path.join(basedir, 'app/static/uploads')
+    
+    # 邮件配置
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@ecommerce.com')
+    
+    # 分页配置
+    PRODUCTS_PER_PAGE = 12
+    ORDERS_PER_PAGE = 10
+    
+    # 上传配置
+    UPLOAD_FOLDER = 'app/static/uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
-
-    # 会话配置
-    PERMANENT_SESSION_LIFETIME = timedelta(days=7)
-
-    # 分页
-    ITEMS_PER_PAGE = 20
-
-    # Bootstrap配置
-    BOOTSTRAP_SERVE_LOCAL = True
-
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    
+    @staticmethod
+    def init_app(app):
+        # 确保上传文件夹存在
+        upload_folder = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder, exist_ok=True)
 
 class DevelopmentConfig(Config):
-    """开发环境配置"""
     DEBUG = True
-    SQLALCHEMY_ECHO = False
-
-
-class TestingConfig(Config):
-    """测试环境配置"""
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-
+    SQLALCHEMY_ECHO = True
+    
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
 
 class ProductionConfig(Config):
-    """生产环境配置"""
     DEBUG = False
-    # 生产环境应该使用环境变量
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
 
-
-# 配置字典
 config = {
     'development': DevelopmentConfig,
-    'testing': TestingConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
