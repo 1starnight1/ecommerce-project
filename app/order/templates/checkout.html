@@ -1,25 +1,151 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>结算</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial; padding: 20px; }
-        .success { color: green; font-weight: bold; }
+        body { padding: 20px; }
+        .order-item { margin-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
     </style>
 </head>
 <body>
-    <h1>💰 结算页面</h1>
-    <p class="success">✅ 模板加载成功！</p>
+    <div class="container">
+        <h1 class="mb-4">💰 结算页面</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% if order %}
+            <!-- 订单详情 -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">订单详情</h5>
+                    <p><strong>订单号:</strong> {{ order.order_number }}</p>
+                    <p><strong>订单状态:</strong> {{ order.status }}</p>
+                    <p><strong>下单时间:</strong> {{ order.created_at }}</p>
+                    <p><strong>支付方式:</strong> {{ order.payment_method }}</p>
+                    <p><strong>收货地址:</strong> {{ order.shipping_address }}</p>
+                    {% if order.notes %}
+                        <p><strong>订单备注:</strong> {{ order.notes }}</p>
+                    {% endif %}
+                    <p><strong>订单总额:</strong> ¥{{ order.total_amount }}</p>
+                    
+                    <h6 class="mt-3">商品列表:</h6>
+                    <div class="order-items">
+                        {% for item in order.items %}
+                            <div class="order-item">
+                                {{ item.product.name }} - {{ item.quantity }}件 - ¥{{ item.price }}/件
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">继续购物</a>
+        {% elif cart %}
+            <div class="row">
+                <!-- 订单确认 -->
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">订单确认</h5>
+                            <div class="order-items">
+                                {% for item in cart.items %}
+                                    <div class="order-item row align-items-center p-2 border-bottom">
+                                        <div class="col-md-1">
+                                            <img src="{{ url_for('static', filename='images/default_product.png') }}" alt="{{ item.product.name }}" class="img-fluid rounded" style="max-height: 50px;">
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ item.product.name }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ item.quantity }}件
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            ¥{{ item.subtotal }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-end mt-2">
+                                <strong>订单总额: ¥{{ cart.total_price }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 订单信息表单 -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">订单信息</h5>
+                            <form method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <div class="form-group">
+                                    <label for="shipping_address">收货地址</label>
+                                    <textarea name="shipping_address" id="shipping_address" rows="3" class="form-control" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="payment_method">支付方式</label>
+                                    <select name="payment_method" id="payment_method" class="form-control" required>
+                                        <option value="alipay">支付宝</option>
+                                        <option value="wechat">微信支付</option>
+                                        <option value="credit_card">信用卡</option>
+                                        <option value="bank_transfer">银行转账</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="notes">订单备注</label>
+                                    <textarea name="notes" id="notes" rows="2" class="form-control"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary mt-3">提交订单</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 订单汇总 -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">订单汇总</h5>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>商品数量:</span>
+                                <span>{{ cart.total_quantity }} 件</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>商品总价:</span>
+                                <span>¥{{ cart.total_price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span>运费:</span>
+                                <span>¥0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="font-weight-bold">应付金额:</span>
+                                <span class="font-weight-bold">¥{{ cart.total_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>没有订单信息</p>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">返回首页</a>
+        {% endif %}
+    </div>
     
-    {% if cart %}
-        <p>订单总额: ¥{{ cart.total_price }}</p>
-    {% endif %}
-    
-    <form method="POST">
-        <label>收货地址：</label><br>
-        <textarea name="address" rows="3" cols="50"></textarea><br><br>
-        <button type="submit">提交订单</button>
-    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

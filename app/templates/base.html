@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -39,14 +39,14 @@
                     <!-- 用户登录后显示的菜单 -->
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'shop.cart' %}active{% endif %}" 
-                           href="{{ url_for('shop.cart') }}">
+                        <a class="nav-link {% if request.endpoint == 'cart.view_cart' %}active{% endif %}" 
+                           href="{{ url_for('cart.view_cart') }}">
                             购物车
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'shop.orders' %}active{% endif %}" 
-                           href="{{ url_for('shop.orders') }}">
+                        <a class="nav-link {% if request.endpoint == 'order.order_list' %}active{% endif %}" 
+                           href="{{ url_for('order.order_list') }}">
                             我的订单
                         </a>
                     </li>
@@ -95,7 +95,7 @@
                     <!-- 购物车 -->
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="{{ url_for('shop.cart') }}">
+                        <a class="nav-link position-relative" href="{{ url_for('cart.view_cart') }}">
                             <i class="fas fa-shopping-cart"></i>
                             <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {{ cart_items_count|default(0) }}
@@ -115,7 +115,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ url_for('shop.orders') }}">
+                                <a class="dropdown-item" href="{{ url_for('order.order_list') }}">
                                     <i class="fas fa-receipt me-2"></i>我的订单
                                 </a>
                             </li>

@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}个人资料{% endblock %}
 
@@ -14,7 +14,7 @@
                     <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action active">
                         <i class="fas fa-user me-2"></i>个人资料
                     </a>
-                    <a href="{{ url_for('shop.orders') }}" class="list-group-item list-group-item-action">
+                    <a href="{{ url_for('order.order_list') }}" class="list-group-item list-group-item-action">
                         <i class="fas fa-receipt me-2"></i>我的订单
                     </a>
                     <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">

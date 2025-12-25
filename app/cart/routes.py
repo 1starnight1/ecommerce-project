@@ -4,10 +4,11 @@ from app import db
 from app.models import Product, Cart, CartItem
 from datetime import datetime  # 添加这行
 
-cart_bp = Blueprint('cart', __name__, url_prefix='/cart')
+# 使用与__init__.py中一致的蓝图名称
+from app.cart import cart
 
 
-@cart_bp.route('/')
+@cart.route('/')
 @login_required
 def view_cart():
     """查看购物车"""
@@ -21,7 +22,7 @@ def view_cart():
     return render_template('view.html', cart=cart, now=datetime.now())
 
 
-@cart_bp.route('/add/<int:product_id>', methods=['POST'])
+@cart.route('/add/<int:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
     """添加商品到购物车"""
@@ -67,7 +68,7 @@ def add_to_cart(product_id):
     return redirect(request.referrer or url_for('main.index'))
 
 
-@cart_bp.route('/update/<int:item_id>', methods=['POST'])
+@cart.route('/update/<int:item_id>', methods=['POST'])
 @login_required
 def update_cart_item(item_id):
     """更新购物车项数量"""
@@ -91,7 +92,7 @@ def update_cart_item(item_id):
     return redirect(url_for('cart.view_cart'))
 
 
-@cart_bp.route('/remove/<int:item_id>', methods=['POST'])
+@cart.route('/remove/<int:item_id>', methods=['POST'])
 @login_required
 def remove_from_cart(item_id):
     """从购物车移除商品"""
@@ -108,7 +109,7 @@ def remove_from_cart(item_id):
     return redirect(url_for('cart.view_cart'))
 
 
-@cart_bp.route('/clear', methods=['POST'])
+@cart.route('/clear', methods=['POST'])
 @login_required
 def clear_cart():
     """清空购物车"""
@@ -121,7 +122,7 @@ def clear_cart():
 
 
 # 添加调试路由
-@cart_bp.route('/test')
+@cart.route('/test')
 def test():
     """测试模板是否能加载"""
     try:

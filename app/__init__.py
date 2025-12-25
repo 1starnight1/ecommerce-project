@@ -1,4 +1,4 @@
-﻿from flask import Flask
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
@@ -54,9 +54,10 @@ def create_app(config_name='default'):
     register_error_handlers(app)
     
     # 注册上下文处理器
-    from app.context_processors import inject_now, inject_categories
+    from app.context_processors import inject_now, inject_categories, inject_cart_info
     app.context_processor(inject_now)
     app.context_processor(inject_categories)
+    app.context_processor(inject_cart_info)
     
     # 创建数据库表（仅用于开发）
     if app.config.get('DEBUG'):

@@ -1,15 +1,14 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, url_for
+from flask import render_template, redirect, url_for, flash, request, url_for
 from flask_login import login_required, current_user
 from app import db
 from app.models import Cart, CartItem, Order, OrderItem, Product
 import random
 import time  # 添加这行
 from datetime import datetime
+from app.order import order
 
-order_bp = Blueprint('order', __name__, url_prefix='/order')
 
-
-@order_bp.route('/checkout', methods=['GET', 'POST'])
+@order.route('/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
     """结算页面"""
@@ -67,7 +66,7 @@ def checkout():
     return render_template('checkout.html', cart=cart, now=datetime.now())
 
 
-@order_bp.route('/<int:order_id>')
+@order.route('/<int:order_id>')
 @login_required
 def order_detail(order_id):
     """订单详情"""
@@ -78,35 +77,18 @@ def order_detail(order_id):
         flash('无权查看此订单', 'error')
         return redirect(url_for('main.index'))
 
-    # 注意：这里需要修改，因为 order/detail.html 可能不存在
-    # 先尝试渲染简单的详情页面
-    return render_template('checkout.html', cart=None, order=order, now=datetime.now())
+    return render_template('detail.html', order=order, now=datetime.now())
 
 
-@order_bp.route('/list')
+@order.route('/list')
 @login_required
 def order_list():
     """订单列表"""
     orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc()).all()
-
-    # 创建简单的订单列表页面
-    return f"""
-    <!DOCTYPE html>
-    <html>
-    <head><meta charset="UTF-8"><title>我的订单</title></head>
-    <body>
-        <h1>我的订单</h1>
-        <ul>
-        {''.join(f'<li>订单号: {order.order_number} - 金额: ¥{order.total_amount} - 状态: {order.status}</li>' for order in orders)}
-        </ul>
-        <a href="/">返回首页</a>
-    </body>
-    </html>
-    """
-    # 或者如果 order/list.html 不存在，可以暂时用这个
+    return render_template('list.html', orders=orders, now=datetime.now())
 
 
-@order_bp.route('/cancel/<int:order_id>', methods=['POST'])
+@order.route('/cancel/<int:order_id>', methods=['POST'])
 @login_required
 def cancel_order(order_id):
     """取消订单"""
@@ -135,7 +117,7 @@ def cancel_order(order_id):
 
 
 # 添加调试路由
-@order_bp.route('/test')
+@order.route('/test')
 def test():
     """测试模板是否能加载"""
     try:

@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>我的订单</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .order-card { margin-bottom: 20px; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; }
+        .order-info { font-size: 14px; color: #666; }
+    </style>
 </head>
 <body>
-
+    <div class="container">
+        <h1 class="mb-4">📋 我的订单</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% if orders %}
+            {% for order in orders %}
+                <div class="card order-card">
+                    <div class="card-header order-header">
+                        <div>
+                            <h5 class="card-title mb-0">订单号: {{ order.order_number }}</h5>
+                            <div class="order-info">
+                                下单时间: {{ order.created_at }} | 支付方式: {{ order.payment_method }} | 订单状态: {{ order.status }}
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('order.order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="order-items">
+                                    {% for item in order.items %}
+                                        <div class="d-flex align-items-center mb-2">
+                                            <img src="{{ url_for('static', filename='images/default_product.png') }}" alt="{{ item.product.name }}" class="img-fluid rounded me-3" style="max-height: 50px;">
+                                            <div class="flex-grow-1">
+                                                <div>{{ item.product.name }}</div>
+                                                <div class="text-muted small">¥{{ item.price }} × {{ item.quantity }}</div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="font-weight-bold">总计: ¥{{ order.total_amount }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                您还没有任何订单
+            </div>
+        {% endif %}
+        
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">继续购物</a>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,10 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "admin_base.html" %}
 
-</body>
-</html>
+{% block title %}商品管理 - 管理后台{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">商品管理</h1>
+    
+    <!-- 操作栏 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{{ url_for('admin.add_product') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> 添加商品
+                    </a>
+                </div>
+                
+                <!-- 分类筛选 -->
+                <div class="d-flex">
+                    <form method="GET" class="d-flex">
+                        <select name="category_id" class="form-select me-2" onchange="this.form.submit()">
+                            <option value="">全部分类</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if category_id == category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品列表 -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>商品名称</th>
+                            <th>分类</th>
+                            <th>价格</th>
+                            <th>库存</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products.items %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.category.name if product.category else '未分类' }}</td>
+                                <td>¥{{ product.price }}</td>
+                                <td>
+                                    <span class="badge {% if product.stock > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ product.stock }}
+                                    </span>
+                                </td>
+                                <td>{{ product.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="{{ url_for('admin.edit_product', id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> 编辑
+                                        </a>
+                                        <form action="{{ url_for('admin.delete_product', id=product.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该商品吗？')">
+                                                <i class="fas fa-trash"></i> 删除
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">暂无商品</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 分页 -->
+            {% if products.pages > 1 %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if products.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.prev_num, category_id=category_id) }}">上一页</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in products.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == products.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.product_manage', page=page_num, category_id=category_id) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.next_num, category_id=category_id) }}">下一页</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
