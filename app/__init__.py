@@ -59,13 +59,23 @@ def create_app(config_name='default'):
     app.context_processor(inject_categories)
     app.context_processor(inject_cart_info)
     
-    # 创建数据库表（仅用于开发）
+    # 创建数据库表和默认数据（仅用于开发）
     if app.config.get('DEBUG'):
         with app.app_context():
             db.create_all()
             from app.models import User, Category, Product
             # 创建默认数据
             create_default_data()
+    
+    # 生产环境中，数据库表应该通过Flask-Migrate迁移创建，而不是自动创建
+    if not app.config.get('DEBUG'):
+        # 确保数据库连接正常
+        with app.app_context():
+            try:
+                db.session.execute('SELECT 1')
+                print("数据库连接正常")
+            except Exception as e:
+                print(f"数据库连接失败: {e}")
     
     return app
 

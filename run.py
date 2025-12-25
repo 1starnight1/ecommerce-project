@@ -207,9 +207,10 @@ def init_database():
     return True
 
 
-# 在应用上下文中初始化数据库
-with app.app_context():
-    init_database()
+# 只在开发环境或显式请求时初始化数据库
+if app.config.get('DEBUG') or os.environ.get('INIT_DATABASE') == 'True':
+    with app.app_context():
+        init_database()
 
 if __name__ == '__main__':
     print("\n" + "=" * 60)
