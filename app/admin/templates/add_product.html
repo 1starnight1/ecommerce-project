@@ -1,0 +1,62 @@
+{% extends "admin_base.html" %}
+
+{% block title %}添加商品 - 管理后台{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">添加商品</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control", placeholder="请输入商品名称") }}
+                    {% for error in form.name.errors %}
+                        <div class="text-danger mt-1 small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control", rows=5, placeholder="请输入商品描述") }}
+                    {% for error in form.description.errors %}
+                        <div class="text-danger mt-1 small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.price.label(class="form-label") }}
+                        {{ form.price(class="form-control", placeholder="请输入商品价格") }}
+                        {% for error in form.price.errors %}
+                            <div class="text-danger mt-1 small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        {{ form.stock.label(class="form-label") }}
+                        {{ form.stock(class="form-control", placeholder="请输入商品库存") }}
+                        {% for error in form.stock.errors %}
+                            <div class="text-danger mt-1 small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.category_id.label(class="form-label") }}
+                    {{ form.category_id(class="form-select") }}
+                    {% for error in form.category_id.errors %}
+                        <div class="text-danger mt-1 small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('admin.product_manage') }}" class="btn btn-secondary">取消</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

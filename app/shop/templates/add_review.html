@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}添加评价 - 电商平台{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">添加评价 - {{ product.name }}</h2>
+        </div>
+        <div class="card-body">
+            <!-- 商品信息 -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/default_product.png') }}" 
+                         class="img-fluid rounded" alt="{{ product.name }}">
+                </div>
+                <div class="col-md-8">
+                    <h3 class="h5">{{ product.name }}</h3>
+                    <p class="text-muted">¥{{ product.price }}</p>
+                    {% if existing_review %}
+                    <div class="alert alert-info mt-2">
+                        <i class="fas fa-info-circle me-2"></i>您已对该商品评价过，下方将显示您的历史评价，您可以修改它。
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- 评价表单 -->
+            <form method="POST" action="{{ url_for('shop.add_review', product_id=product.id) }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    <label for="rating" class="form-label">评分</label>
+                    <div class="star-rating">
+                        {% for i in range(1, 6) %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" 
+                               {% if form.rating.data == i %}checked{% endif %} class="d-none">
+                        <label for="star{{ i }}" class="star">{{ '★' }}</label>
+                        {% endfor %}
+                    </div>
+                    {% for error in form.rating.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.comment.label(class="form-label") }}
+                    {{ form.comment(class="form-control", rows=4, placeholder="请输入您的评价...") }}
+                    {% for error in form.comment.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('main.product_detail', id=product.id) }}" class="btn btn-secondary">取消</a>
+                    <button type="submit" class="btn btn-primary">
+                        {% if existing_review %}更新评价{% else %}提交评价{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .star-rating {
+        display: flex;
+        direction: rtl;
+        font-size: 2rem;
+    }
+    
+    .star {
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    
+    .star:hover,
+    .star:hover ~ .star,
+    input:checked ~ .star {
+        color: #ffc107;
+    }
+</style>
+{% endblock %}
