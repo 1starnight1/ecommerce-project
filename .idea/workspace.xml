@@ -4,31 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="创建购物车和订单功能，但无法加载模版">
+    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="功能基本完整">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/templates/admin_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/templates/admin_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/templates/product_manage.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/templates/product_manage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cart/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/cart/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/cart/templates/view.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/cart/templates/view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/main/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main/templates/product_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/main/templates/product_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/order/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/order/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/order/templates/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/order/templates/checkout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/order/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/order/templates/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/order/templates/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/order/templates/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/shop/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/shop/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/shop/templates/cart.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/shop/templates/checkout.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/shop/templates/orders.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/orders.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/instance/ecommerce.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/ecommerce.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,6 +238,7 @@
       <workItem from="1766576534153" duration="76000" />
       <workItem from="1766576615643" duration="8144000" />
       <workItem from="1766604851585" duration="1615000" />
+      <workItem from="1766634737724" duration="1287000" />
     </task>
     <task id="LOCAL-00001" summary="所有文件配置好，但无法加载模版">
       <option name="closed" value="true" />
@@ -294,7 +272,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766582839991</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="功能基本完整">
+      <option name="closed" value="true" />
+      <created>1766634749864</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1766634749864</updated>
+    </task>
+    <task id="LOCAL-00006" summary="功能基本完整">
+      <option name="closed" value="true" />
+      <created>1766634772305</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1766634772305</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,7 +311,8 @@
     <MESSAGE value="可以登录但登录后无提示" />
     <MESSAGE value="可以登录并显示个人信息。购物车功能未完成" />
     <MESSAGE value="squash! 创建购物车和订单功能，但无法加载模版" />
-    <option name="LAST_COMMIT_MESSAGE" value="squash! 创建购物车和订单功能，但无法加载模版" />
+    <MESSAGE value="功能基本完整" />
+    <option name="LAST_COMMIT_MESSAGE" value="功能基本完整" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ecommerce_project$create_templates.coverage" NAME="create_templates 覆盖结果" MODIFIED="1766572334273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
