@@ -261,13 +261,97 @@ ufw allow 80
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 ```
 
+## 一站式部署 (推荐)
+
+### 1. 环境准备
+
+确保服务器已安装Docker和Docker Compose：
+
+```bash
+# 更新系统
+apt update && apt upgrade -y
+
+# 安装Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+
+# 安装Docker Compose
+curl -L "https://github.com/docker/compose/releases/download/v2.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+# 验证安装
+docker --version
+docker-compose --version
+```
+
+### 2. 部署步骤
+
+```bash
+# 克隆项目代码到服务器
+cd /var/www
+git clone <repository-url> ecommerce
+cd ecommerce
+
+# 启动容器服务
+docker-compose up -d
+
+# 查看服务状态
+docker-compose ps
+```
+
+### 3. 环境配置
+
+编辑docker-compose.yml文件中的环境变量（可选）：
+
+```bash
+nano docker-compose.yml
+```
+
+主要配置项：
+- `SECRET_KEY`: 应用密钥，用于加密会话数据
+- `MYSQL_ROOT_PASSWORD`: MySQL根密码
+- `MYSQL_PASSWORD`: 应用数据库密码
+
+### 4. 访问网站
+
+部署完成后，可以通过以下方式访问网站：
+
+```bash
+# 通过公网IP访问
+http://your-server-ip
+
+# 如果配置了域名
+http://your-domain.com
+```
+
+### 5. 常见操作
+
+```bash
+# 查看应用日志
+docker-compose logs -f web
+
+# 查看数据库日志
+docker-compose logs -f db
+
+# 查看Nginx日志
+docker-compose logs -f nginx
+
+# 重启所有服务
+docker-compose restart
+
+# 停止所有服务
+docker-compose down
+
+# 查看容器状态
+docker-compose ps
+```
+
 ## 常见问题解决
 
 ### 1. 数据库连接错误
 
-- 检查.env文件中的DATABASE_URL配置是否正确
-- 确保MySQL服务正在运行: `systemctl status mysql`
-- 验证MySQL用户权限是否正确
+- 检查docker-compose.yml中的数据库配置是否正确
+- 确保数据库服务正在运行: `docker-compose logs -f db`
 
 ### 2. 404/400错误
 
@@ -290,9 +374,9 @@ db.session.commit()
 
 ### 4. 生产环境调试
 
-- 查看Gunicorn日志: `tail -f /var/www/ecommerce/logs/gunicorn.log`
-- 查看Nginx日志: `tail -f /var/log/nginx/error.log`
-- 查看Supervisor日志: `supervisorctl tail -f ecommerce`
+- 查看应用日志: `docker-compose logs -f web`
+- 查看Nginx日志: `docker-compose logs -f nginx`
+- 进入容器调试: `docker-compose exec web /bin/sh`
 
 ## 功能列表
 

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # 应用服务
+  web:
+    build: .
+    container_name: ecommerce_web
+    depends_on:
+      - db
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=your-secret-key-change-in-production
+      - DATABASE_URL=mysql+pymysql://ecommerce_user:password123@db/ecommerce
+      - DEBUG=False
+      - INIT_DATABASE=True
+    volumes:
+      - ./app/static:/app/app/static
+      - ./instance:/app/instance
+    restart: unless-stopped
+    networks:
+      - ecommerce_network
+
+  # MySQL数据库服务
+  db:
+    image: mysql:8.0
+    container_name: ecommerce_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password123
+      - MYSQL_DATABASE=ecommerce
+      - MYSQL_USER=ecommerce_user
+      - MYSQL_PASSWORD=password123
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - ecommerce_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Nginx反向代理服务
+  nginx:
+    image: nginx:alpine
+    container_name: ecommerce_nginx
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./app/static:/app/app/static
+    restart: unless-stopped
+    networks:
+      - ecommerce_network
+
+volumes:
+  mysql_data:
+
+networks:
+  ecommerce_network:
+    driver: bridge
