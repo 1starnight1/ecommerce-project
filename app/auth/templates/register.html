@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}用户注册 - 电子商务网站{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 text-center">用户注册</h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- 添加CSRF令牌 -->
+                    <form method="POST" action="{{ url_for('auth.register') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="请输入用户名" required autofocus>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">电子邮箱</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="请输入电子邮箱" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密码</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="请输入密码" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password_confirm" class="form-label">确认密码</label>
+                            <input type="password" class="form-control" id="password_confirm" name="password_confirm" 
+                                   placeholder="请再次输入密码" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">注册</button>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="mb-0">已有账号？<a href="{{ url_for('auth.login') }}">立即登录</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

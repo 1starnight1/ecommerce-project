@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="添加了数据库依赖和修复产品环境问题" />
+    <list default="true" id="ccef7770-557b-48ec-b080-2167973ce5b3" name="更改" comment="修复了数据库连接问题">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance/ecommerce.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/ecommerce.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -236,7 +241,7 @@
       <workItem from="1766576534153" duration="76000" />
       <workItem from="1766576615643" duration="8144000" />
       <workItem from="1766604851585" duration="1615000" />
-      <workItem from="1766634737724" duration="4014000" />
+      <workItem from="1766634737724" duration="5446000" />
     </task>
     <task id="LOCAL-00001" summary="所有文件配置好，但无法加载模版">
       <option name="closed" value="true" />
@@ -302,7 +307,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766639042428</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="修复了数据库连接问题">
+      <option name="closed" value="true" />
+      <created>1766640087761</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1766640087761</updated>
+    </task>
+    <task id="LOCAL-00010" summary="修复了数据库连接问题">
+      <option name="closed" value="true" />
+      <created>1766640091783</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1766640091785</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -328,7 +349,8 @@
     <MESSAGE value="功能基本完整" />
     <MESSAGE value="最终版修改，功能基本完整" />
     <MESSAGE value="添加了数据库依赖和修复产品环境问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加了数据库依赖和修复产品环境问题" />
+    <MESSAGE value="修复了数据库连接问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复了数据库连接问题" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ecommerce_project$create_templates.coverage" NAME="create_templates 覆盖结果" MODIFIED="1766572334273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
