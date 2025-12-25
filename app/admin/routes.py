@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.models import Product, Category, Order, User, UserLog
 from app.forms import ProductForm, CategoryForm
+from sqlalchemy import or_
 from app.admin import admin
 
 def admin_required(f):
@@ -49,8 +50,12 @@ def product_manage():
     """商品管理"""
     page = request.args.get('page', 1, type=int)
     category_id = request.args.get('category_id', type=int)
+    keyword = request.args.get('q', '').strip()
     
     query = Product.query
+    
+    if keyword:
+        query = query.filter(or_(Product.name.contains(keyword), Product.description.contains(keyword)))
     
     if category_id:
         query = query.filter_by(category_id=category_id)
@@ -64,7 +69,8 @@ def product_manage():
     return render_template('product_manage.html',
                          products=products,
                          categories=categories,
-                         category_id=category_id)
+                         category_id=category_id,
+                         keyword=keyword)
 
 
 @admin.route('/products/add', methods=['GET', 'POST'])

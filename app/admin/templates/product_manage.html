@@ -15,10 +15,11 @@
                     </a>
                 </div>
                 
-                <!-- 分类筛选 -->
-                <div class="d-flex">
-                    <form method="GET" class="d-flex">
-                        <select name="category_id" class="form-select me-2" onchange="this.form.submit()">
+                <!-- 搜索和筛选 -->
+                <div class="d-flex gap-2">
+                    <form method="GET" class="d-flex" action="{{ url_for('admin.product_manage') }}">
+                        <input type="text" name="q" class="form-control me-2" placeholder="搜索商品名称或描述" value="{{ keyword }}">
+                        <select name="category_id" class="form-select me-2">
                             <option value="">全部分类</option>
                             {% for category in categories %}
                                 <option value="{{ category.id }}" {% if category_id == category.id %}selected{% endif %}>
@@ -26,6 +27,14 @@
                                 </option>
                             {% endfor %}
                         </select>
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search"></i> 搜索
+                        </button>
+                        {% if keyword or category_id %}
+                            <a href="{{ url_for('admin.product_manage') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-refresh"></i> 重置
+                            </a>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -67,6 +76,7 @@
                                             <i class="fas fa-edit"></i> 编辑
                                         </a>
                                         <form action="{{ url_for('admin.delete_product', id=product.id) }}" method="POST" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定要删除该商品吗？')">
                                                 <i class="fas fa-trash"></i> 删除
                                             </button>
@@ -89,14 +99,14 @@
                     <ul class="pagination justify-content-center">
                         {% if products.has_prev %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.prev_num, category_id=category_id) }}">上一页</a>
+                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.prev_num, category_id=category_id, q=keyword) }}">上一页</a>
                             </li>
                         {% endif %}
                         
                         {% for page_num in products.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
                             {% if page_num %}
                                 <li class="page-item {% if page_num == products.page %}active{% endif %}">
-                                    <a class="page-link" href="{{ url_for('admin.product_manage', page=page_num, category_id=category_id) }}">{{ page_num }}</a>
+                                    <a class="page-link" href="{{ url_for('admin.product_manage', page=page_num, category_id=category_id, q=keyword) }}">{{ page_num }}</a>
                                 </li>
                             {% else %}
                                 <li class="page-item disabled">
@@ -107,7 +117,7 @@
                         
                         {% if products.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.next_num, category_id=category_id) }}">下一页</a>
+                                <a class="page-link" href="{{ url_for('admin.product_manage', page=products.next_num, category_id=category_id, q=keyword) }}">下一页</a>
                             </li>
                         {% endif %}
                     </ul>

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}搜索结果 - 电子商务网站{% endblock %}
+
+{% block content %}
+<div class="search-header mb-4">
+    <h1>搜索结果</h1>
+    <p class="text-muted">搜索关键词: "{{ keyword }}" {% if category_id %}(分类: {{ categories|selectattr('id', 'equalto', category_id)|first|attr('name') }}){% endif %}</p>
+</div>
+
+<!-- 分类筛选 -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">分类筛选</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('main.search', q=keyword) }}" 
+                       class="btn btn-outline-primary {% if not category_id %}active{% endif %}">
+                        全部分类
+                    </a>
+                    {% for category in categories %}
+                        <a href="{{ url_for('main.search', q=keyword, category_id=category.id) }}" 
+                           class="btn btn-outline-primary {% if category_id == category.id %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 搜索结果统计 -->
+<div class="alert alert-info mb-4">
+    找到 <strong>{{ products.total }}</strong> 个相关商品
+</div>
+
+<!-- 商品列表 -->
+<div class="row">
+    {% for product in products.items %}
+    <div class="col-md-3 mb-4">
+        <div class="card product-card h-100">
+            <img src="{{ url_for('static', filename='images/default_product.png') }}" 
+                 class="card-img-top product-image" alt="{{ product.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text text-truncate-2">{{ product.description }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="h5 text-danger">¥{{ product.price }}</span>
+                    <span class="badge bg-secondary">{{ product.category.name if product.category else '未分类' }}</span>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">库存: {{ product.stock }}件</small>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex gap-2">
+                    {% if current_user.is_authenticated and product.stock > 0 %}
+                        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST" class="w-100">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-cart-plus"></i> 加入购物车
+                            </button>
+                        </form>
+                    {% elif not current_user.is_authenticated %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary w-100">登录购买</a>
+                    {% else %}
+                        <button class="btn btn-secondary w-100" disabled>缺货</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- 没有搜索结果时的提示 -->
+{% if products.total == 0 %}
+<div class="text-center py-5 bg-light rounded">
+    <h4>没有找到相关商品</h4>
+    <p class="text-muted">请尝试使用其他关键词或分类</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary">返回首页</a>
+</div>
+{% endif %}
+
+<!-- 分页 -->
+{% if products.pages > 1 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if products.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.search', q=keyword, category_id=category_id, page=products.prev_num) }}">上一页</a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in products.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == products.page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.search', q=keyword, category_id=category_id, page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.search', q=keyword, category_id=category_id, page=products.next_num) }}">下一页</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

@@ -67,9 +67,9 @@ class Product(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
     # 关系
-    cart_items = db.relationship('CartItem', backref='product', lazy='dynamic')
-    order_items = db.relationship('OrderItem', backref='product', lazy='dynamic')
-    reviews = db.relationship('Review', backref='product', lazy='dynamic')
+    cart_items = db.relationship('CartItem', backref='product', lazy='dynamic', cascade='all, delete-orphan')
+    order_items = db.relationship('OrderItem', backref='product', lazy='dynamic', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', backref='product', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Product {self.name}>'
