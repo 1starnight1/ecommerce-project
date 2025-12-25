@@ -1,4 +1,4 @@
-﻿from flask import render_template, request, flash, jsonify
+from flask import render_template, request, flash, jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.models import Product, Category, UserLog
@@ -60,42 +60,7 @@ def index():
                          category_id=category_id,
                          sort_by=sort_by)
 
-@main.route('/product/<int:id>')
-def product_detail(id):
-    """商品详情页"""
-    product = Product.query.get_or_404(id)
-    
-    # 获取相关商品（同分类）
-    related_products = Product.query\
-        .filter_by(category_id=product.category_id)\
-        .filter(Product.id != product.id)\
-        .order_by(db.func.random())\
-        .limit(4)\
-        .all()
-    
-    # 获取商品评价
-    reviews = product.reviews.order_by(db.desc('created_at')).limit(10).all()
-    
-    # 计算平均评分
-    from sqlalchemy import func
-    avg_rating = db.session.query(func.avg('rating')).filter_by(product_id=id).scalar()
-    
-    # 记录用户浏览商品日志
-    if current_user.is_authenticated:
-        log = UserLog(
-            user_id=current_user.id,
-            action='view_product',
-            details=f'浏览商品: {product.name} (ID: {product.id})',
-            ip_address=request.remote_addr
-        )
-        db.session.add(log)
-        db.session.commit()
-    
-    return render_template('product_detail.html', 
-                         product=product,
-                         related_products=related_products,
-                         reviews=reviews,
-                         avg_rating=avg_rating)
+
 
 @main.route('/search')
 def search():
